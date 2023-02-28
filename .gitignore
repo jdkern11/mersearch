@@ -1,0 +1,14 @@
+**/__pycache__/
+**/*.pyc
+
+!.gitignore
+**/.ipynb_checkpoints/
+data/
+
+*.swp
+**/*.swp
+*.DS_Store
+**/*.DS_Store
+
+.coverage
+**/.coverage
