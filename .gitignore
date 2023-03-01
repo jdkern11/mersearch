@@ -12,3 +12,5 @@ data/
 
 .coverage
 **/.coverage
+
+**/*.log
