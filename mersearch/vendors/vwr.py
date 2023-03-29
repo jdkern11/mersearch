@@ -130,7 +130,7 @@ def substructure_search(
             sleep(rand())
     if filename is not None:
         with open(filename, "a+") as f:
-            f.write("]\n")
+            f.write("\n]")
     return data
 
 
