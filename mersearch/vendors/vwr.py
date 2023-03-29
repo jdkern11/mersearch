@@ -1,5 +1,7 @@
+import json
+from datetime import datetime
 from time import sleep
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 from copy import deepcopy
 import logging
 
@@ -49,7 +51,12 @@ def exact_search(
 
 
 def substructure_search(
-    driver: WebDriver, mol_file: str, pages: int = -1, add_sleep: bool = True
+    driver: WebDriver,
+    mol_file: str,
+    pages: int = -1,
+    add_sleep: bool = True,
+    filename: Optional[str] = None,
+    substructure: Optional[str] = None,
 ) -> List[Dict]:
     """Search VWR International website for substructures
 
@@ -57,13 +64,19 @@ def substructure_search(
         driver: web driver to search for molecule using.
         mol_file: mol file to search for.
         pages: how many pages to search. If < 1, all pages will be searched.
-        add_sleep: whether or not to add fake sleeping
+        add_sleep: whether or not to add fake sleeping.
+        filename: Optional name of file to save data to in json format.
+            If not provided, data is not saved.
+        substructure: Optional smiles string representing the substructure searched.
     Returns:
         List of dictionaries with keys "smiles" and "data", with smiles pointing to
         the smiles string and data pointing to the data parse from the vwr search, or
         an empty dictionary if data missing.
 
     """
+    if filename is not None:
+        with open(filename, "a+") as f:
+            f.write("[\n")
     data = []
     page = 1
     login(driver)
@@ -83,7 +96,20 @@ def substructure_search(
             if add_sleep:
                 sleep(rand())
             row += 1
-        data.append({"page": page, "data": deepcopy(page_data)})
+        data.append(
+            {
+                "data": deepcopy(page_data),
+                "time": str(datetime.now()),
+                "substructure": substructure,
+                "page": page,
+            }
+        )
+        if filename is not None:
+            with open(filename, "a+") as f:
+                if page > 1:
+                    f.write(",\n")
+                json.dump(data[-1], f, indent=4)
+
         if add_sleep:
             sleep(rand())
         try:
@@ -93,12 +119,18 @@ def substructure_search(
                 )
             )
         except NoSuchElementException:
+            if filename is not None:
+                with open(filename, "a+") as f:
+                    f.write("\n]")
             return data
         scroll(driver, next_button)
         click_until_stale(next_button)
         page += 1
         if add_sleep:
             sleep(rand())
+    if filename is not None:
+        with open(filename, "a+") as f:
+            f.write("]\n")
     return data
 
 
