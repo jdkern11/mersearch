@@ -19,8 +19,10 @@ lxml = "^4.9.2"
 pytest = "^7.2.1"
 black = "^23.1.0"
 
+[tool.poetry.group.notebook]
+optional = true
 
-[tool.poetry.group.temp.dependencies]
+[tool.poetry.group.notebook.dependencies]
 notebook = "^6.5.2"
 
 [build-system]
