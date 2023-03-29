@@ -74,6 +74,8 @@ def substructure_search(
         an empty dictionary if data missing.
 
     """
+    if substructure is not None:
+        logger.info(f"Searching for substructure {substructure}")
     if filename is not None:
         with open(filename, "a+") as f:
             f.write("[\n")
@@ -96,10 +98,12 @@ def substructure_search(
             if add_sleep:
                 sleep(rand())
             row += 1
+        now = str(datetime.now())
+        logger.info(f"Page finished reading at time {now}")
         data.append(
             {
                 "data": deepcopy(page_data),
-                "time": str(datetime.now()),
+                "time": now,
                 "substructure": substructure,
                 "page": page,
             }
