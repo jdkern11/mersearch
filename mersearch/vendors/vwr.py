@@ -11,7 +11,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from mersearch.helpers import scroll, click_until_stale
 
@@ -122,7 +122,7 @@ def substructure_search(
                     (By.XPATH, '//a[contains(text(),"Next")]')
                 )
             )
-        except NoSuchElementException:
+        except NoSuchElementException or TimeoutException:
             if filename is not None:
                 with open(filename, "a+") as f:
                     f.write("\n]")
@@ -221,7 +221,7 @@ def click_mol(driver: WebDriver, row: str = "row_0.0", add_sleep: bool = True) -
         )
         scroll(driver, button)
         click_until_stale(button)
-    except NoSuchElementException:
+    except NoSuchElementException or TimeoutException:
         return False
     return True
 
