@@ -122,7 +122,7 @@ def substructure_search(
                     (By.XPATH, '//a[contains(text(),"Next")]')
                 )
             )
-        except NoSuchElementException or TimeoutException:
+        except (NoSuchElementException, TimeoutException) as e:
             if filename is not None:
                 with open(filename, "a+") as f:
                     f.write("\n]")
@@ -221,7 +221,7 @@ def click_mol(driver: WebDriver, row: str = "row_0.0", add_sleep: bool = True) -
         )
         scroll(driver, button)
         click_until_stale(button)
-    except NoSuchElementException or TimeoutException:
+    except (NoSuchElementException, TimeoutException) as e:
         return False
     return True
 
