@@ -339,7 +339,7 @@ def extract_mol_data(
         elif len(td) == 5:
             try:
                 row["amount"] = td[2].text.strip()
-                row["unit"] = td[3].text.strip()
+                row["units"] = td[3].text.strip()
                 row["price"] = td[4].text.strip()
                 price_data.append(row.copy())
             except Exception as e:

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mersearch"
-version = "1.1.0"
+version = "1.1.1"
 description = ""
 authors = ["jdkern11 <leolion29@gmail.com>"]
 readme = "README.md"
@@ -24,6 +24,12 @@ optional = true
 
 [tool.poetry.group.notebook.dependencies]
 notebook = "^6.5.2"
+
+[tool.poetry.group.chemistry]
+optional = true
+
+[tool.poetry.group.chemistry.dependencies]
+rdkit = "^2022.9.5"
 
 [build-system]
 requires = ["poetry-core"]
