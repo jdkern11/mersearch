@@ -15,6 +15,7 @@ def smiles_to_mol_file_format(smiles: str) -> str:
         String in mol file format.
     """
     mol = Chem.MolFromSmiles(smiles)
+    mol = Chem.AddHs(mol,explicitOnly=True)
     return Chem.MolToMolBlock(mol)
 
 

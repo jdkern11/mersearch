@@ -18,7 +18,7 @@ lxml = "^4.9.2"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"
 black = "^23.1.0"
-polydb = {git = "git@github.com:Ramprasad-Group/polydb.git", rev = "v3.1.0", extras = ["remote"]}
+polydb = {git = "git@github.com:Ramprasad-Group/polydb.git", rev = "v4.0.0", extras = ["remote"]}
 
 [tool.poetry.group.notebook]
 optional = true
