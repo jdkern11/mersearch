@@ -54,6 +54,7 @@ def substructure_search(
     driver: WebDriver,
     mol_file: str,
     pages: int = -1,
+    start_page: int = None,
     add_sleep: bool = True,
     filename: Optional[str] = None,
     substructure: Optional[str] = None,
@@ -64,6 +65,7 @@ def substructure_search(
         driver: web driver to search for molecule using.
         mol_file: mol file to search for.
         pages: how many pages to search. If < 1, all pages will be searched.
+        start_page: what page to start the search at.
         add_sleep: whether or not to add fake sleeping.
         filename: Optional name of file to save data to in json format.
             If not provided, data is not saved.
@@ -83,6 +85,8 @@ def substructure_search(
     page = 1
     login(driver)
     search_for_mol(driver, mol_file, "substructure")
+    if start_page is not None:
+        driver.get(driver.current_url + f'&p={start_page}')
     row = 0
     while pages < 1 or page <= pages:
         page_data = []
