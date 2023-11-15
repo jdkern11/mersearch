@@ -85,17 +85,23 @@ def substructure_search(
     page = 1
     login(driver)
     search_for_mol(driver, mol_file, "substructure")
-    if start_page is not None:
-        wait = 0
-        while 'show_hitlist.cgi' not in driver.current_url and wait < 100000:
-            wait += 1
-        driver.get(driver.current_url + f'&p={start_page}')
-        page = start_page
-        print(driver.current_url)
+    wait = 0
     row = 0
-    while pages < 1 or page <= pages:
+    # wait until page loads or timeout hit
+    while get_first_row(driver) == -1 and wait < 100000:
+        wait += 1
+    if get_first_row(driver) == -1:
+        logger.error("Some error has occurred that is preventing the page from loading")
+        return
+    if start_page != None:
+        driver.get(driver.current_url + f'&p={start_page}')
+        while row == 0 or row == -1:
+            row = get_first_row(driver)
+        page = start_page
+    while (pages < 1 or page <= pages) and row != -1:
         page_data = []
         logger.info(f"Searching page {page} in vwr")
+        logger.info(f"Current url is {driver.current_url}")
         while click_mol(driver, row=f"row_{row}.0"):
             try:
                 page_data.append(extract_mol_data(driver))
@@ -141,7 +147,6 @@ def substructure_search(
         page += 1
         if add_sleep:
             sleep(rand())
-        print(driver.current_url)
     if filename is not None:
         with open(filename, "a+") as f:
             f.write("\n]")
@@ -212,6 +217,23 @@ def search_for_mol(
             EC.presence_of_element_located((By.NAME, "ss_button"))
         ).click()
 
+def get_first_row(driver: WebDriver):
+    """Gets the integer of the first row in the table"""
+    soup = BeautifulSoup(driver.page_source, "lxml")
+    table = soup.find("table", attrs={"class": "hitlist-table"})
+    if table is None:
+        return -1
+    table_data = table.find_all("tr")
+    min_ind = -1
+    for tr in table_data:
+        if tr.get('id') is not None:
+            ind = int(float((tr.get('id').split('_')[1])))
+            if min_ind == -1:
+                min_ind = ind
+            else:
+                min_ind = min(min_ind, ind)
+    logger.info(f"First row index is {min_ind}")
+    return min_ind
 
 def click_mol(driver: WebDriver, row: str = "row_0.0", add_sleep: bool = True) -> bool:
     """Clicks on the mol returned by vwr
