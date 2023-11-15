@@ -125,7 +125,8 @@ def substructure_search(
         )
         if filename is not None:
             with open(filename, "a+") as f:
-                if page > 1:
+                if (start_page is None and page > 1)
+                or (page > start_page):
                     f.write(",\n")
                 json.dump(data[-1], f, indent=4)
 
