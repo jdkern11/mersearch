@@ -87,6 +87,7 @@ def substructure_search(
     search_for_mol(driver, mol_file, "substructure")
     if start_page is not None:
         driver.get(driver.current_url + f'&p={start_page}')
+        page = start_page
     row = 0
     while pages < 1 or page <= pages:
         page_data = []
