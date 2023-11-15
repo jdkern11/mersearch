@@ -86,8 +86,12 @@ def substructure_search(
     login(driver)
     search_for_mol(driver, mol_file, "substructure")
     if start_page is not None:
+        wait = 0
+        while 'show_hitlist.cgi' not in driver.current_url and wait < 100000:
+            wait += 1
         driver.get(driver.current_url + f'&p={start_page}')
         page = start_page
+        print(driver.current_url)
     row = 0
     while pages < 1 or page <= pages:
         page_data = []
@@ -137,6 +141,7 @@ def substructure_search(
         page += 1
         if add_sleep:
             sleep(rand())
+        print(driver.current_url)
     if filename is not None:
         with open(filename, "a+") as f:
             f.write("\n]")
